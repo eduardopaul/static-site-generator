@@ -29,7 +29,7 @@ class LeafNode(HTMLNode):
     def to_html(self):
         if not self.value:
             raise ValueError("A LeafNode has to have a value.")
-        
+
         if self.tag is None:
             resulting_html = self.value
         else:
