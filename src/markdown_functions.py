@@ -1,4 +1,4 @@
-from re import findall
+from re import findall, fullmatch, match, split
 
 from textnode import TextNode, TextType
 
@@ -49,4 +49,77 @@ def extract_markdown_links(text):
     regex = r"(?<!\!)\[(.*?)\]\((.*?)\)"
     results = findall(regex, text)
     return results
+
+
+def split_nodes_link(old_nodes):
+    return split_nodes_hypertext(old_nodes, "link")
+
+
+def split_nodes_image(old_nodes):
+    return split_nodes_hypertext(old_nodes, "image")
+
+
+def split_nodes_hypertext(old_nodes, kind):
+    '''
+    Take an input list of nodes and split each one of them into new nodes, defined by the given hypertext markdown syntax.
+    '''
+
+    match kind:
+        case "link":
+            full_regex = r"(?<!\!)(\[.*?\]\(.*?\))"
+            parts_regex = r"(?<!\!)\[(.*?)\]\((.*?)\)"
+            text_type = TextType.LINK
+
+        case "image":
+            full_regex = r"(\!\[.*?\]\(.*?\))"
+            parts_regex = r"\!\[(.*?)\]\((.*?)\)"
+            text_type = TextType.IMAGE
+
+    new_nodes = []
+    for node in old_nodes:
+
+        split_text = split(
+            full_regex,
+            node.text,
+        )
+
+        for text_part in split_text:
+            hypertext_parts = match(parts_regex, text_part)
+            if hypertext_parts:
+                new_nodes.append(
+                    TextNode(
+                        hypertext_parts.group(1),
+                        text_type,
+                        hypertext_parts.group(2),
+                    )
+                )
+            else:
+                new_nodes.append(
+                    TextNode(
+                        text_part,
+                        TextType.PLAIN,
+                    )
+                )
+
+        to_delete = []
+        for idx, node in enumerate(new_nodes):
+            if not node.text:
+                to_delete.append(idx)
+        for idx in to_delete[::-1]:
+            del new_nodes[idx]
+
+    return new_nodes
+
+
+def text_to_textnodes(text):
+    input_node = TextNode(text, TextType.PLAIN)
+    nodes = split_nodes_delimiter([input_node], "**", TextType.BOLD)
+    nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC)
+    nodes = split_nodes_delimiter(nodes, "`", TextType.CODE)
+    # Set this breakpoint inside the `split_nodes_image` function so as to skip irrelevant iterations.
+    # Why is `split_nodes_image` breaking the links??
+    nodes = split_nodes_image(nodes)
+    # nodes = split_nodes_link(nodes)
+
+    return nodes
 
