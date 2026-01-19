@@ -170,20 +170,80 @@ class TestSplitNodesDelimiter(unittest.TestCase):
 
 
 class TestExtractMarkdownImages(unittest.TestCase):
-    def test_extract_markdown_images(self):
+    def test_single_image(self):
         matches = extract_markdown_images(
             "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)"
         )
+
         template = [("image", "https://i.imgur.com/zjjcJKZ.png")]
+
         self.assertListEqual(matches, template)
 
+    def test_multiple_images(self):
+        matches = extract_markdown_images(
+                "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png), and another ![one](https://blabla.com)"
+        )
 
-class TestExtractMarkdownImages(unittest.TestCase):
-    def test_extract_markdown_links(self):
+        template = [
+            ("image", "https://i.imgur.com/zjjcJKZ.png"),
+            ("one", "https://blabla.com"),
+        ]
+
+        self.assertListEqual(matches, template)
+
+    def test_with_link(self):
+        matches = extract_markdown_images(
+                "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png), and a [link](https://blabla.com)"
+        )
+
+        template = [
+            ("image", "https://i.imgur.com/zjjcJKZ.png"),
+        ]
+
+        self.assertListEqual(matches, template)
+
+class TestExtractMarkdownLinks(unittest.TestCase):
+    def test_single_link(self):
         matches = extract_markdown_links(
             "This is text with a [link](https://i.imgur.com/zjjcJKZ.png)"
         )
+
         template = [("link", "https://i.imgur.com/zjjcJKZ.png")]
+
+        self.assertListEqual(matches, template)
+
+    def test_several_links(self):
+        matches = extract_markdown_links(
+            "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+        )
+
+        template = [
+            ("to boot dev", "https://www.boot.dev"),
+            ("to youtube", "https://www.youtube.com/@bootdotdev"),
+        ]
+
+        self.assertListEqual(matches, template)
+
+    def test_with_image(self):
+        matches = extract_markdown_links(
+                "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png), and a [link](https://blabla.com)"
+        )
+
+        template = [
+            ("link", "https://blabla.com"),
+        ]
+
+        self.assertListEqual(matches, template)
+
+    def test_with_image_reverse(self):
+        matches = extract_markdown_links(
+                "This is text with a [link](https://blabla.com) and an ![image](https://i.imgur.com/zjjcJKZ.png)."
+        )
+
+        template = [
+            ("link", "https://blabla.com"),
+        ]
+
         self.assertListEqual(matches, template)
 
 

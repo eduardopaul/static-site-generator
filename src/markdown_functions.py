@@ -4,6 +4,9 @@ from textnode import TextNode, TextType
 
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
+    '''
+    Take an input list of nodes and split each one of them into new nodes marked by the given delimiter, such that the markdown gets structurally decomposed.
+    '''
     new_nodes = []
 
     for node in old_nodes:
@@ -37,13 +40,13 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
 
 def extract_markdown_images(text):
-    regex = r"\!\[([\w\s\-]*)\]\(([\w:/\-\.]*)\)"
+    regex = r"\!\[(.*?)\]\((.*?)\)"
     results = findall(regex, text)
     return results
 
 
 def extract_markdown_links(text):
-    regex = r"\[([\w\s\-]*)\]\(([\w:/\-\.]*)\)"
+    regex = r"(?<!\!)\[(.*?)\]\((.*?)\)"
     results = findall(regex, text)
     return results
 
