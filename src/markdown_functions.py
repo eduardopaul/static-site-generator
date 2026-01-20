@@ -97,7 +97,8 @@ def split_nodes_hypertext(old_nodes, kind):
                 new_nodes.append(
                     TextNode(
                         text_part,
-                        TextType.PLAIN,
+                        node.text_type,
+                        node.url,
                     )
                 )
 
@@ -116,10 +117,8 @@ def text_to_textnodes(text):
     nodes = split_nodes_delimiter([input_node], "**", TextType.BOLD)
     nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC)
     nodes = split_nodes_delimiter(nodes, "`", TextType.CODE)
-    # Set this breakpoint inside the `split_nodes_image` function so as to skip irrelevant iterations.
-    # Why is `split_nodes_image` breaking the links??
     nodes = split_nodes_image(nodes)
-    # nodes = split_nodes_link(nodes)
+    nodes = split_nodes_link(nodes)
 
     return nodes
 
