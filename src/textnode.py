@@ -11,18 +11,18 @@ class TextType(Enum):
 
 
 class TextNode:
-    def __init__(self, text, text_type, url=None):
+    def __init__(self, text=None, text_type=TextType.PLAIN, props=None):
         self.text = text
         self.text_type = TextType(text_type)
-        self.url = url
+        self.props= props
 
     def __eq__(self, other):
         return (
             self.text == other.text and
             self.text_type == other.text_type and
-            self.url == other.url
+            self.props == other.props
         )
 
     def __repr__(self):
-        return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
+        return f"TextNode({self.text}, {self.text_type.value}, {self.props})"
 

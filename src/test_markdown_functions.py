@@ -263,7 +263,7 @@ class TestSplitNodesLink(unittest.TestCase):
             TextNode(
                 "to boot dev",
                 TextType.LINK,
-                "https://www.boot.dev",
+                {"href": "https://www.boot.dev"},
             ),
             TextNode(
                 " and ",
@@ -272,7 +272,7 @@ class TestSplitNodesLink(unittest.TestCase):
             TextNode(
                 "to youtube",
                 TextType.LINK,
-                "https://www.youtube.com/@bootdotdev",
+                {"href": "https://www.youtube.com/@bootdotdev"},
             ),
         ]
 
@@ -318,7 +318,7 @@ class TestSplitNodesLink(unittest.TestCase):
             TextNode(
                 "link",
                 TextType.LINK,
-                "https://www.example.com/link.html",
+                {"href": "https://www.example.com/link.html"},
             ),
         ]
 
@@ -361,7 +361,7 @@ class TestSplitNodesLink(unittest.TestCase):
             TextNode(
                 "link",
                 TextType.LINK,
-                "https://www.example.com/",
+                {"href": "https://www.example.com/"},
             ),
         ]
 
@@ -376,17 +376,39 @@ class TestSplitNodesImage(unittest.TestCase):
             "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
             TextType.PLAIN,
         )
+
         new_nodes = split_nodes_image([node])
+
+        template = [
+            TextNode(
+                "This is text with an ",
+                TextType.PLAIN,
+            ),
+            TextNode(
+                None,
+                TextType.IMAGE,
+                {
+                    "alt": "image",
+                    "src": "https://i.imgur.com/zjjcJKZ.png",
+                },
+            ),
+            TextNode(
+                " and another ",
+                TextType.PLAIN,
+            ),
+            TextNode(
+                None,
+                TextType.IMAGE,
+                {
+                    "alt": "second image",
+                    "src": "https://i.imgur.com/3elNhQu.png",
+                }
+            ),
+        ]
+
         self.assertListEqual(
-            [
-                TextNode("This is text with an ", TextType.PLAIN),
-                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
-                TextNode(" and another ", TextType.PLAIN),
-                TextNode(
-                    "second image", TextType.IMAGE, "https://i.imgur.com/3elNhQu.png"
-                ),
-            ],
             new_nodes,
+            template,
         )
 
     def test_no_images(self):
@@ -422,9 +444,12 @@ class TestSplitNodesImage(unittest.TestCase):
                 TextType.PLAIN,
             ),
             TextNode(
-                "image",
+                None,
                 TextType.IMAGE,
-                "https://www.example.com/image.png"
+                {
+                    "alt": "image",
+                    "src": "https://www.example.com/image.png",
+                },
             ),
             TextNode(
                 " and a [link](https://www.example.com/link.html)",

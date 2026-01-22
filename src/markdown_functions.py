@@ -78,33 +78,59 @@ def split_nodes_hypertext(old_nodes, kind):
     new_nodes = []
     for node in old_nodes:
 
-        split_text = split(
-            full_regex,
-            node.text,
-        )
+        # for images the text attribute is None and the split fails
+        if node.text is not None:
+            split_text = split(
+                full_regex,
+                node.text,
+            )
 
-        for text_part in split_text:
-            hypertext_parts = match(parts_regex, text_part)
-            if hypertext_parts:
-                new_nodes.append(
-                    TextNode(
-                        hypertext_parts.group(1),
-                        text_type,
-                        hypertext_parts.group(2),
+            for text_part in split_text:
+                hypertext_parts = match(parts_regex, text_part)
+                if hypertext_parts:
+                    if kind == "image":
+                        new_nodes.append(
+                            TextNode(
+                                text=None,
+                                text_type=text_type,
+                                props={
+                                    "alt": hypertext_parts.group(1),
+                                    "src": hypertext_parts.group(2),
+                                }
+                            )
+                        )
+                    elif kind == "link":
+                        new_nodes.append(
+                            TextNode(
+                                text=hypertext_parts.group(1),
+                                text_type=text_type,
+                                props={
+                                    "href": hypertext_parts.group(2)
+                                }
+                            )
+                        )
+                else:
+                    new_nodes.append(
+                        TextNode(
+                            text_part,
+                            node.text_type,
+                            node.props,
+                        )
                     )
+
+        # for the images
+        else:
+            new_nodes.append(
+                TextNode(
+                    None,
+                    node.text_type,
+                    node.props,
                 )
-            else:
-                new_nodes.append(
-                    TextNode(
-                        text_part,
-                        node.text_type,
-                        node.url,
-                    )
-                )
+            )
 
         to_delete = []
         for idx, node in enumerate(new_nodes):
-            if not node.text:
+            if (not node.text) and (not node.props):
                 to_delete.append(idx)
         for idx in to_delete[::-1]:
             del new_nodes[idx]

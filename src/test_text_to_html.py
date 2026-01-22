@@ -24,14 +24,14 @@ class TextToHTMLTest(unittest.TestCase):
         self.assertEqual(html_node.value, "Some italic example text")
 
     def test_link(self):
-        node = TextNode("link text", "link", url="example.com")
+        node = TextNode("link text", "link", props={"href": "example.com"})
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, "a")
         self.assertEqual(html_node.value, "link text")
         self.assertEqual(html_node.props, {"href": "example.com"})
 
     def test_image(self):
-        node = TextNode("alt text", "image", url="images/img.png")
+        node = TextNode(None, "image", props={"alt": "alt text", "src": "images/img.png"})
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, "img")
         self.assertEqual(html_node.value, None)

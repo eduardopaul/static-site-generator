@@ -26,16 +26,13 @@ def text_node_to_html_node(text_node):
             return LeafNode(
                 tag="a",
                 value=text_node.text,
-                props={"href": text_node.url},
+                props=text_node.props,
             )
         case TextType.IMAGE:
             return LeafNode(
                 tag="img",
                 value=None,
-                props={
-                    "src": text_node.url,
-                    "alt": text_node.text,
-                }
+                props=text_node.props,
             )
         case TextType.CODE:
             return LeafNode(tag="code", value=text_node.text)

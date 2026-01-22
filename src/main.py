@@ -5,7 +5,7 @@ def main():
     node = TextNode(
         text="Hello",
         text_type="plain",
-        url=None,
+        props=None,
     )
 
     print(node)

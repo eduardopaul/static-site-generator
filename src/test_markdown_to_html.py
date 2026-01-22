@@ -18,9 +18,22 @@ class TestsTextToTextNodes(unittest.TestCase):
             TextNode(" word and a ", TextType.PLAIN),
             TextNode("code block", TextType.CODE),
             TextNode(" and an ", TextType.PLAIN),
-            TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+            TextNode(
+                None,
+                TextType.IMAGE,
+                {
+                    "alt": "obi wan image",
+                    "src": "https://i.imgur.com/fJRm4Vk.jpeg",
+                },
+            ),
             TextNode(" and a ", TextType.PLAIN),
-            TextNode("link", TextType.LINK, "https://boot.dev"),
+            TextNode(
+                "link",
+                TextType.LINK,
+                {
+                    "href": "https://boot.dev"
+                },
+            ),
         ]
 
         self.assertEqual(
