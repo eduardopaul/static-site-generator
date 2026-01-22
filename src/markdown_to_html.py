@@ -20,11 +20,13 @@ def textnodes_to_leafnodes(textnodes):
     for textnode in textnodes:
         text = textnode.text
         tag = get_tag_from_texttype(textnode.text_type)
+        props = textnode.props
 
         leafnodes.append(
             LeafNode(
                 tag=tag,
                 value=text,
+                props=props,
             )
         )
 
