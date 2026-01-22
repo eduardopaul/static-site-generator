@@ -16,5 +16,18 @@ class TestHTMLNode(unittest.TestCase):
 
         self.assertEqual(props, props_template)
 
+    def test_equality(self):
+        htmlnode1 = HTMLNode(
+            tag="p",
+            value="Some text.",
+        )
+
+        htmlnode2 = HTMLNode(
+            tag="p",
+            value="Some text.",
+        )
+
+        self.assertEqual(htmlnode1, htmlnode2)
+
 if __name__ == "__main__":
     unittest.main()
