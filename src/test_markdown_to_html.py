@@ -36,7 +36,10 @@ class TestTextnodesToLeafnodes(unittest.TestCase):
             TextNode("italic", TextType.ITALIC),
             TextNode(" and a ", TextType.PLAIN),
             TextNode("bold", TextType.BOLD),
-            TextNode(" word.", TextType.PLAIN),
+            TextNode(" word. We also have a small ", TextType.PLAIN),
+            TextNode("code block", TextType.CODE),
+            TextNode(".", TextType.PLAIN),
+
         ]
 
         template = [
@@ -44,7 +47,9 @@ class TestTextnodesToLeafnodes(unittest.TestCase):
             LeafNode(value="italic", tag="i"),
             LeafNode(value=" and a ", tag=None),
             LeafNode(value="bold", tag="b"),
-            LeafNode(value=" word.", tag=None),
+            LeafNode(value=" word. We also have a small ", tag=None),
+            LeafNode(value="code block", tag="code"),
+            LeafNode(value=".", tag=None),
         ]
 
         leafnodes = textnodes_to_leafnodes(textnodes)
