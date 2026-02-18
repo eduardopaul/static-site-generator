@@ -27,7 +27,7 @@ def block_to_block_type(block):
         block_type = BlockType.HEADING
     elif match(r"```\n", block) and search(r"```$", block):
         block_type = BlockType.CODE
-    elif all(match(r"> ", line) for line in block.splitlines()):
+    elif all(match(r"> *", line) for line in block.splitlines()):
         block_type = BlockType.QUOTE
     elif all(match(r"- ", line) for line in block.splitlines()):
         block_type = BlockType.UNORDERED_LIST
@@ -41,7 +41,7 @@ def block_to_block_type(block):
 
 def test_ordered_list(block):
     try:
-        first_idx = match(r"(\d+)\.", block).group(1)
+        first_idx = match(r"(\d+)\. ", block).group(1)
     except AttributeError:
         return False
 

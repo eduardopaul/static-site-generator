@@ -79,7 +79,7 @@ class TestBlockToBlockType(unittest.TestCase):
     def test_quote(self):
         block = dedent("""
             > Beautiful quote from a random book.
-            > Another one.
+            >Another one.
         """).strip()
 
         block_type = BlockType.QUOTE
