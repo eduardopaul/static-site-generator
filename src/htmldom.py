@@ -15,69 +15,68 @@ class Tag(Enum):
 class Node:
     def __init__(self):
         self.parentNode = None
-        self.parentElement = None
 
-        self.childNodes = []
         self.firstChild = None
         self.lastChild = None
 
         self.previousSibling = None
         self.nextSibling = None
 
-    def _update_first_and_last_children(self):
-        if self.childNodes:
-            self.firstChild = self.childNodes[0]
-            self.lastChild = self.childNodes[-1]
-        else:
-            self.firstChild = None
-            self.lastChild = None
+    @property
+    def childNodes(self):
+        nodes = []
+        node = self.firstChild
 
-    def _set_parentNode(self, parentNode):
-        self.parentNode = parentNode
+        while node:
+            nodes.append(node)
+            node = node.nextSibling
 
-        if isinstance(parentNode, Element):
-            self.parentElement = parentNode
-
-        idx = parentNode.childNodes.index(self)
-        if idx > 0:
-            self.previousSibling = parentNode.childNodes[idx-1]
-        if idx < len(parentNode.childNodes) - 1:
-            self.nextSibling = parentNode.childNodes[idx+1]
-
-    def _unset_parentNode(self):
-        self.parentNode = None
-        self.parentElement = None
-        self.previousSibling = None
-        self.nextSibling = None
+        return nodes
 
     def appendChild(self, childNode):
         if not isinstance(childNode, Node):
-            raise TypeError(f"The parameter `childNode` must be a `Node`, not `{type(childNode).__name__}`")
+            raise TypeError(f"The parameter `childNode` should be a `Node`, but is a `{type(childNode).__name__}`.")
 
-        if childNode.parentNode is not None:
-            childNode.parentNode.removeChild(childNode)
+        if self.firstChild is None:
+            self.firstChild = childNode
+        else:
+            self.lastChild.nextSibling = childNode
+            childNode.previousSibling = self.lastChild
 
-        self.childNodes.append(childNode)
-        childNode._set_parentNode(self)
-        self._update_first_and_last_children()
+        self.lastChild = childNode
+        childNode.parentNode = self
 
     def removeChild(self, childNode):
         if not isinstance(childNode, Node):
-            raise TypeError(f"The parameter `childNode` must be a `Node`, not `{type(childNode).__name__}`")
+            raise TypeError(f"The parameter `childNode` should be a `Node`, but is a `{type(childNode).__name__}`.")
 
-        if childNode not in self.childNodes:
-            return
+        if childNode in self.childNodes:
+            if childNode is self.firstChild:
+                if childNode is self.lastChild:
+                    self.firstChild = None
+                    self.lastChild = None
+                else:
+                    self.firstChild = childNode.nextSibling
+                    self.firstChild.previousSibling = None
 
-        self.childNodes.remove(childNode)
-        childNode._unset_parentNode()
-        self._update_first_and_last_children()
+            elif childNode is self.lastChild:
+                self.lastChild = childNode.previousSibling
+                self.lastChild.nextSibling = None
+
+            else:
+                childNode.previousSibling.nextSibling = childNode.nextSibling
+                childNode.nextSibling.previousSibling = childNode.previousSibling
+
+            childNode.previousSibling = None
+            childNode.nextSibling = None
+            childNode.parentNode = None
 
     def insertBefore(self, newChildNode, referenceChildNode):
         if not isinstance(newChildNode, Node):
-            raise TypeError(f"The parameter `newChildNode` must be a `Node`, not `{type(newChildNode).__name__}`")
+            raise TypeError(f"The parameter `newChildNode` should be a `Node`, but is a `{type(newChildNode).__name__}`")
 
         if not isinstance(referenceChildNode, Node):
-            raise TypeError(f"The parameter `referenceChildNode` must be a `Node`, not `{type(referenceChildNode).__name__}`")
+            raise TypeError(f"The parameter `referenceChildNode` should be a `Node`, but is a `{type(referenceChildNode).__name__}`")
 
         if referenceChildNode not in self.childNodes:
             raise ValueError("The given `referenceChildNode` is not one of current the `Node`'s children.")
@@ -85,11 +84,12 @@ class Node:
         if newChildNode.parentNode is not None:
             newChildNode.parentNode.removeChild(newChildNode)
 
-        idx = self.childNodes.index(referenceChildNode)
-        self.childNodes.insert(idx, newChildNode)
-        self._update_first_and_last_children()
+        newChildNode.parentNode = self
+        newChildNode.nextSibling = referenceChildNode
+        newChildNode.previousSibling = referenceChildNode.previousSibling
 
-        newChildNode._set_parentNode(self)
+        referenceChildNode.previousSibling = newChildNode
+        newChildNode.previousSibling.nextSibling = newChildNode
 
     def replaceChild(self, newChildNode, oldChildNode):
         if not isinstance(newChildNode, Node):
