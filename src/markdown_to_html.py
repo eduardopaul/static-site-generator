@@ -51,34 +51,7 @@ def get_tag_from_texttype(texttype):
     return tag
 
 
-
-#     text = "This is text with an _italic_ word."
-#
-# -> text_to_textnodes(text):
-#     textnodes = [
-#         TextNode("This is text with an ", TextType.PLAIN),
-#         TextNode("italic", TextType.ITALIC),
-#         TextNode(" word", TextType.PLAIN),
-#     ]
-#
-# -> textnodes_to_leafnodes(textnodes):
-#     leafnodes = [
-#         LeafNode(value="This is text with an "),
-#         LeafNode(value="italic", tag="i"),
-#         LeafNode(value=" word"),
-#     ]
-#
-# -> leafnodes_to_parentnode(leafnodes, blocktype):
-#     parentnode = ParentNode(
-#         tag=blocktype,
-#         children=leafnodes,
-#     )
-#
-# -> parentnode.to_html():
-#     "<p>This is text with an <i>italic</i> word.</p>"
-
-
-def markdown_to_html_node(markdown):
-    pass
-
+def markdown_to_html_node(markdown: str) -> HTMLNode:
+    """Consume a markdown page and produce from it its equivalent as an HTMLNode ready to be displayed as a web page."""
+    return HTMLNode()
 
