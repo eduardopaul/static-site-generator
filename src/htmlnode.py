@@ -6,7 +6,39 @@ class HTMLNode:
         self.props = props
 
     def to_html(self):
-        raise NotImplementedError
+        if self.value:
+            if self.children:
+                raise ValueError("An HTMLNode can have either its own value or children.")
+
+            if self.tag:
+                if self.props:
+                    opening_tag = f"<{self.tag}{self.props_to_html()}>"
+                else:
+                    opening_tag = f"<{self.tag}>"
+
+                content = f"{self.value}"
+                closing_tag = f"</{self.tag}>"
+
+                return opening_tag + content + closing_tag
+
+            return self.value
+
+        if self.tag:
+            if self.props:
+                opening_tag = f"<{self.tag}{self.props_to_html()}>"
+            else:
+                opening_tag = f"<{self.tag}>"
+
+            content = f"{self.value}"
+            closing_tag = f"</{self.tag}>"
+
+            if self.children:
+                children = ""
+                for child in self.children:
+                    children += child.to_html()
+                return opening_tag + children + closing_tag
+            else:
+                return opening_tag + closing_tag
 
     def props_to_html(self):
         if (self.props is None) or (isinstance(self.props, dict) and len(self.props) == 0):

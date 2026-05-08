@@ -4,6 +4,86 @@ from htmlnode import HTMLNode, LeafNode, ParentNode
 
 
 class TestHTMLNode(unittest.TestCase):
+    def test_value_and_children(self):
+        child_node = HTMLNode(
+            value="child_content",
+        )
+        node = HTMLNode(
+            value="content",
+            children=[child_node],
+        )
+
+        self.assertRaises(ValueError, node.to_html)
+
+    def test_value_and_tag_no_props(self):
+        node = HTMLNode(
+            tag="b",
+            value="bold",
+        )
+        template = "<b>bold</b>"
+
+        self.assertEqual(
+            node.to_html(),
+            template,
+        )
+
+    def test_value_and_tag_with_props(self):
+        node = HTMLNode(
+            tag="p",
+            value="content text",
+            props={"title": "title"}
+        )
+        template = '<p title="title">content text</p>'
+
+        self.assertEqual(
+            node.to_html(),
+            template,
+        )
+
+    def test_simple_value(self):
+        node = HTMLNode(
+            value="html value"
+        )
+        template = "html value"
+
+        self.assertEqual(
+            node.to_html(),
+            template,
+        )
+
+    def test_tag_and_children(self):
+        child_node1 = HTMLNode(
+            tag="b",
+            value="bold",
+        )
+        child_node2 = HTMLNode(
+            value="plain text"
+        )
+        child_node3 = HTMLNode(
+            tag="i",
+            value="italics",
+        )
+        node = HTMLNode(
+            tag="p",
+            children=[child_node1, child_node2, child_node3],
+            props={"title": "title"},
+        )
+        template = '<p title="title"><b>bold</b>plain text<i>italics</i></p>'
+
+        self.assertEqual(
+            node.to_html(),
+            template,
+        )
+
+    def test_tag(self):
+        node = HTMLNode(tag="b")
+        template = "<b></b>"
+
+        self.assertEqual(
+            node.to_html(),
+            template,
+        )
+
     def test_props_to_html(self):
         props = HTMLNode(
                 props={
