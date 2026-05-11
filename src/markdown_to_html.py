@@ -1,4 +1,4 @@
-from re import sub
+from re import sub, MULTILINE
 
 from htmlnode import HTMLNode
 from markdown_block_functions import BlockType, block_to_block_type
@@ -52,6 +52,16 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
                 )
             )
 
+        case BlockType.QUOTE:
+            markdown = sub("^> *", "", markdown, flags=MULTILINE)
+            markdown = sub("\n", "<br>", markdown)
+
+            html_node.children.append(
+                HTMLNode(
+                    tag="blockquote",
+                    value=markdown,
+                )
+            )
 
     return html_node
 

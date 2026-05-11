@@ -1,3 +1,4 @@
+from textwrap import dedent
 import unittest
 
 from htmlnode import HTMLNode, LeafNode
@@ -73,6 +74,21 @@ class TestMarkdownToHtmlNode(unittest.TestCase):
     def test_isolated_code(self):
         markdown = "```\nint **x = 1; int **y = 2;```"
         html = "<div><code>int **x = 1; int **y = 2;</code></div>"
+
+        self.assertEqual(
+            markdown_to_html_node(markdown).to_html(),
+            html,
+        )
+
+    def test_isolated_quote(self):
+        markdown = dedent(
+            """\
+            > quote line one
+            > quote line two
+            > quote line three"""
+        )
+
+        html = "<div><blockquote>quote line one<br>quote line two<br>quote line three</blockquote></div>"
 
         self.assertEqual(
             markdown_to_html_node(markdown).to_html(),
