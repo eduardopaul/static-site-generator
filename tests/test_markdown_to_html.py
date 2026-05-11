@@ -71,6 +71,15 @@ class TestMarkdownToHtmlNode(unittest.TestCase):
             html,
         )
 
+    def test_isolated_heading_lower_level(self):
+        markdown = "### Heading #3"
+        html = "<div><h3>Heading #3</h3></div>"
+
+        self.assertEqual(
+            markdown_to_html_node(markdown).to_html(),
+            html,
+        )
+
     def test_isolated_code(self):
         markdown = "```\nint **x = 1; int **y = 2;```"
         html = "<div><code>int **x = 1; int **y = 2;</code></div>"

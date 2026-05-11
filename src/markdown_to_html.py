@@ -1,4 +1,4 @@
-from re import sub, MULTILINE
+from re import findall, match, sub, MULTILINE
 
 from htmlnode import HTMLNode
 from markdown_block_functions import BlockType, block_to_block_type
@@ -34,10 +34,13 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
                 )
 
         case BlockType.HEADING:
+            prefix = match("#+ ", markdown).group(0)
+            heading_level = len(findall("#", prefix))
+
             html_node.children.append(
                 HTMLNode(
-                    tag="h1",
-                    value=sub("# ", "", markdown),
+                    tag=f"h{heading_level}",
+                    value=sub("#+ ", "", markdown),
                 )
             )
 
