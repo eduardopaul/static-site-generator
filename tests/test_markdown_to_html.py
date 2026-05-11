@@ -160,10 +160,12 @@ class TestMarkdownToHtmlNode(unittest.TestCase):
             int x = 1;
             ```
 
-            One last paragraph."""
+            One last paragraph
+            spanning multiple
+            lines."""
         )
 
-        html = "<div><h1>heading #1</h1><h2>heading #2</h2><p>A <b>markdown</b> file may contain several <i>blocks</i>.</p><ul><li>item 1</li><li>item 2</li><li>item 3</li></ul><ol><li>item 1</li><li>item 2</li><li>item 3</li></ol><blockquote>quote line 1<br>quote line 2<br>quote line 3</blockquote><pre><code>int x = 1;</code></pre><p>One last paragraph.</p></div>"
+        html = "<div><h1>heading #1</h1><h2>heading #2</h2><p>A <b>markdown</b> file may contain several <i>blocks</i>.</p><ul><li>item 1</li><li>item 2</li><li>item 3</li></ul><ol><li>item 1</li><li>item 2</li><li>item 3</li></ol><blockquote>quote line 1<br>quote line 2<br>quote line 3</blockquote><pre><code>int x = 1;</code></pre><p>One last paragraph spanning multiple lines.</p></div>"
 
         self.assertEqual(
             markdown_to_html_node(markdown).to_html(),

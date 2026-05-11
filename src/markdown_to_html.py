@@ -31,6 +31,8 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
             case BlockType.PARAGRAPH:
                 paragraph_node = HTMLNode(tag="p", children=[])
 
+                block_markdown = sub("\n", " ", block_markdown)
+
                 textnodes = markdown_to_textnodes(block_markdown)
                 for textnode in textnodes:
                     paragraph_node.children.append(
