@@ -80,6 +80,23 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
                 )
             )
 
+        case BlockType.ORDERED_LIST:
+            markdown = sub(r"^\d+\. ", "", markdown, flags=MULTILINE)
+            markdown = markdown.splitlines()
+
+            html_lines = []
+            for line in markdown:
+                html_lines.append("<li>" + line + "</li>")
+
+            markdown = "".join(html_lines)
+
+            html_node.children.append(
+                HTMLNode(
+                    tag="ol",
+                    value=markdown,
+                )
+            )
+
 
     return html_node
 

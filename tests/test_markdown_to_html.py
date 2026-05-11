@@ -110,6 +110,22 @@ class TestMarkdownToHtmlNode(unittest.TestCase):
             html,
         )
 
+    def test_isolated_ordered_list(self):
+        markdown = dedent(
+            """\
+            1. Item 1
+            2. Item 2
+            3. Item 3"""
+        )
+
+        html = "<div><ol><li>Item 1</li><li>Item 2</li><li>Item 3</li></ol></div>"
+
+        self.assertEqual(
+            markdown_to_html_node(markdown).to_html(),
+            html,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
 
