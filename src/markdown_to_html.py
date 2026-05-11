@@ -56,8 +56,13 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
 
                 html_node.children.append(
                     HTMLNode(
-                        tag="code",
-                        value=block_markdown,
+                        tag="pre",
+                        children=[
+                            HTMLNode(
+                                tag="code",
+                                value=block_markdown,
+                            ),
+                        ]
                     )
                 )
 
