@@ -41,5 +41,17 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
                 )
             )
 
+        case BlockType.CODE:
+            markdown = sub("```\n", "", markdown)
+            markdown = sub("```", "", markdown)
+
+            html_node.children.append(
+                HTMLNode(
+                    tag="code",
+                    value=markdown,
+                )
+            )
+
+
     return html_node
 

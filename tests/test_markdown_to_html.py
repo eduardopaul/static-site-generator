@@ -70,6 +70,15 @@ class TestMarkdownToHtmlNode(unittest.TestCase):
             html,
         )
 
+    def test_isolated_code(self):
+        markdown = "```\nint **x = 1; int **y = 2;```"
+        html = "<div><code>int **x = 1; int **y = 2;</code></div>"
+
+        self.assertEqual(
+            markdown_to_html_node(markdown).to_html(),
+            html,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

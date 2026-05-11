@@ -61,13 +61,13 @@ class TestBlockToBlockType(unittest.TestCase):
         )
 
     def test_code(self):
-        block = dedent("""
+        block = dedent("""\
             ```
             for file in *; do
                 echo "$file"
             done
             ```
-       """).strip()
+        """)
 
         block_type = BlockType.CODE
 
