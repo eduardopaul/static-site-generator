@@ -61,6 +61,16 @@ class TestMarkdownToHtmlNode(unittest.TestCase):
             html,
         )
 
+    def test_isolated_heading_top_level(self):
+        markdown = "# Heading 1"
+        html = "<div><h1>Heading 1</h1></div>"
+
+        self.assertEqual(
+            markdown_to_html_node(markdown).to_html(),
+            html,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
 

@@ -1,4 +1,7 @@
+from re import sub
+
 from htmlnode import HTMLNode
+from markdown_block_functions import BlockType, block_to_block_type
 import markdown_functions
 from textnode import TextNode, TextType
 from text_to_html import text_node_to_html_node
@@ -20,11 +23,23 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
 
     html_node = HTMLNode(tag="div", children=[])
 
-    textnodes = markdown_to_textnodes(markdown)
-    for textnode in textnodes:
-        html_node.children.append(
-            text_node_to_html_node(textnode)
-        )
+    block_type = block_to_block_type(markdown)
+
+    match block_type:
+        case BlockType.PARAGRAPH:
+            textnodes = markdown_to_textnodes(markdown)
+            for textnode in textnodes:
+                html_node.children.append(
+                    text_node_to_html_node(textnode)
+                )
+
+        case BlockType.HEADING:
+            html_node.children.append(
+                HTMLNode(
+                    tag="h1",
+                    value=sub("# ", "", markdown),
+                )
+            )
 
     return html_node
 
