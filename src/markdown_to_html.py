@@ -1,4 +1,4 @@
-from re import findall, match, sub, MULTILINE
+from re import findall, match, split, sub, MULTILINE
 
 from htmlnode import HTMLNode
 from markdown_block_functions import BlockType, block_to_block_type
@@ -23,86 +23,88 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
 
     html_node = HTMLNode(tag="div", children=[])
 
-    block_type = block_to_block_type(markdown)
+    list_of_blocks = split(r"\n\n+", markdown)
+    for block_markdown in list_of_blocks:
+        block_type = block_to_block_type(block_markdown)
 
-    match block_type:
-        case BlockType.PARAGRAPH:
-            paragraph_node = HTMLNode(tag="p", children=[])
+        match block_type:
+            case BlockType.PARAGRAPH:
+                paragraph_node = HTMLNode(tag="p", children=[])
 
-            textnodes = markdown_to_textnodes(markdown)
-            for textnode in textnodes:
-                paragraph_node.children.append(
-                    text_node_to_html_node(textnode)
+                textnodes = markdown_to_textnodes(block_markdown)
+                for textnode in textnodes:
+                    paragraph_node.children.append(
+                        text_node_to_html_node(textnode)
+                    )
+
+                html_node.children.append(paragraph_node)
+
+            case BlockType.HEADING:
+                prefix = match("#+ ", block_markdown).group(0)
+                heading_level = len(findall("#", prefix))
+
+                html_node.children.append(
+                    HTMLNode(
+                        tag=f"h{heading_level}",
+                        value=sub("#+ ", "", block_markdown),
+                    )
                 )
 
-            html_node.children.append(paragraph_node)
+            case BlockType.CODE:
+                block_markdown = sub("```\n", "", block_markdown)
+                block_markdown = sub("\n*```", "", block_markdown)
 
-        case BlockType.HEADING:
-            prefix = match("#+ ", markdown).group(0)
-            heading_level = len(findall("#", prefix))
-
-            html_node.children.append(
-                HTMLNode(
-                    tag=f"h{heading_level}",
-                    value=sub("#+ ", "", markdown),
+                html_node.children.append(
+                    HTMLNode(
+                        tag="code",
+                        value=block_markdown,
+                    )
                 )
-            )
 
-        case BlockType.CODE:
-            markdown = sub("```\n", "", markdown)
-            markdown = sub("```", "", markdown)
+            case BlockType.QUOTE:
+                block_markdown = sub("^> *", "", block_markdown, flags=MULTILINE)
+                block_markdown = sub("\n", "<br>", block_markdown)
 
-            html_node.children.append(
-                HTMLNode(
-                    tag="code",
-                    value=markdown,
+                html_node.children.append(
+                    HTMLNode(
+                        tag="blockquote",
+                        value=block_markdown,
+                    )
                 )
-            )
 
-        case BlockType.QUOTE:
-            markdown = sub("^> *", "", markdown, flags=MULTILINE)
-            markdown = sub("\n", "<br>", markdown)
+            case BlockType.UNORDERED_LIST:
+                block_markdown = sub("^- ", "", block_markdown, flags=MULTILINE)
+                block_markdown = block_markdown.splitlines()
 
-            html_node.children.append(
-                HTMLNode(
-                    tag="blockquote",
-                    value=markdown,
+                html_lines = []
+                for line in block_markdown:
+                    html_lines.append("<li>" + line + "</li>")
+
+                block_markdown = "".join(html_lines)
+
+                html_node.children.append(
+                    HTMLNode(
+                        tag="ul",
+                        value=block_markdown,
+                    )
                 )
-            )
 
-        case BlockType.UNORDERED_LIST:
-            markdown = sub("^- ", "", markdown, flags=MULTILINE)
-            markdown = markdown.splitlines()
+            case BlockType.ORDERED_LIST:
+                block_markdown = sub(r"^\d+\. ", "", block_markdown, flags=MULTILINE)
+                block_markdown = block_markdown.splitlines()
 
-            html_lines = []
-            for line in markdown:
-                html_lines.append("<li>" + line + "</li>")
+                html_lines = []
+                for line in block_markdown:
+                    html_lines.append("<li>" + line + "</li>")
 
-            markdown = "".join(html_lines)
+                block_markdown = "".join(html_lines)
 
-            html_node.children.append(
-                HTMLNode(
-                    tag="ul",
-                    value=markdown,
+                html_node.children.append(
+                    HTMLNode(
+                        tag="ol",
+                        value=block_markdown,
+                    )
                 )
-            )
-
-        case BlockType.ORDERED_LIST:
-            markdown = sub(r"^\d+\. ", "", markdown, flags=MULTILINE)
-            markdown = markdown.splitlines()
-
-            html_lines = []
-            for line in markdown:
-                html_lines.append("<li>" + line + "</li>")
-
-            markdown = "".join(html_lines)
-
-            html_node.children.append(
-                HTMLNode(
-                    tag="ol",
-                    value=markdown,
-                )
-            )
 
 
     return html_node

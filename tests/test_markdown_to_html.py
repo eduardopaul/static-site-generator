@@ -134,6 +134,42 @@ class TestMarkdownToHtmlNode(unittest.TestCase):
             html,
         )
 
+    def test_several_blocks(self):
+        self.maxDiff = None
+        markdown = dedent(
+            """\
+            # heading #1
+
+            ## heading #2
+
+            A **markdown** file may contain several _blocks_.
+
+            - item 1
+            - item 2
+            - item 3
+
+            1. item 1
+            2. item 2
+            3. item 3
+
+            > quote line 1
+            > quote line 2
+            > quote line 3
+
+            ```
+            int x = 1;
+            ```
+
+            One last paragraph."""
+        )
+
+        html = "<div><h1>heading #1</h1><h2>heading #2</h2><p>A <b>markdown</b> file may contain several <i>blocks</i>.</p><ul><li>item 1</li><li>item 2</li><li>item 3</li></ul><ol><li>item 1</li><li>item 2</li><li>item 3</li></ol><blockquote>quote line 1<br>quote line 2<br>quote line 3</blockquote><code>int x = 1;</code><p>One last paragraph.</p></div>"
+
+        self.assertEqual(
+            markdown_to_html_node(markdown).to_html(),
+            html,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
