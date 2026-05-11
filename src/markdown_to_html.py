@@ -27,11 +27,15 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
 
     match block_type:
         case BlockType.PARAGRAPH:
+            paragraph_node = HTMLNode(tag="p", children=[])
+
             textnodes = markdown_to_textnodes(markdown)
             for textnode in textnodes:
-                html_node.children.append(
+                paragraph_node.children.append(
                     text_node_to_html_node(textnode)
                 )
+
+            html_node.children.append(paragraph_node)
 
         case BlockType.HEADING:
             prefix = match("#+ ", markdown).group(0)

@@ -46,7 +46,7 @@ class TestsTextToTextNodes(unittest.TestCase):
 class TestMarkdownToHtmlNode(unittest.TestCase):
     def test_single_line_of_text(self):
         markdown = "simple line of text"
-        html = "<div>simple line of text</div>"
+        html = "<div><p>simple line of text</p></div>"
 
         self.assertEqual(
             markdown_to_html_node(markdown).to_html(),
@@ -55,7 +55,7 @@ class TestMarkdownToHtmlNode(unittest.TestCase):
 
     def test_single_line_with_structure(self):
         markdown = "This is a **test case** with _structure_, an image (![image](www.example.com)) and a [link](www.example.com). Also some `code`."
-        html = '<div>This is a <b>test case</b> with <i>structure</i>, an image (<img alt="image" src="www.example.com">) and a <a href="www.example.com">link</a>. Also some <code>code</code>.</div>'
+        html = '<div><p>This is a <b>test case</b> with <i>structure</i>, an image (<img alt="image" src="www.example.com">) and a <a href="www.example.com">link</a>. Also some <code>code</code>.</p></div>'
 
         self.assertEqual(
             markdown_to_html_node(markdown).to_html(),
