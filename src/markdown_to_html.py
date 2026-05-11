@@ -63,5 +63,23 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
                 )
             )
 
+        case BlockType.UNORDERED_LIST:
+            markdown = sub("^- ", "", markdown, flags=MULTILINE)
+            markdown = markdown.splitlines()
+
+            html_lines = []
+            for line in markdown:
+                html_lines.append("<li>" + line + "</li>")
+
+            markdown = "".join(html_lines)
+
+            html_node.children.append(
+                HTMLNode(
+                    tag="ul",
+                    value=markdown,
+                )
+            )
+
+
     return html_node
 
