@@ -1,14 +1,10 @@
-from textnode import TextNode
+from pathlib import Path
+
+from copy_contents import copy_contents
 
 
 def main():
-    node = TextNode(
-        text="Hello",
-        text_type="plain",
-        props=None,
-    )
-
-    print(node)
+    copy_contents(Path("./static"), Path("./public"))
 
 main()
 
