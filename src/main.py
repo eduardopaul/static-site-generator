@@ -1,10 +1,14 @@
 from pathlib import Path
 
-from copy_contents import copy_contents
+from page import generate_page
 
 
 def main():
-    copy_contents(Path("./static"), Path("./public"))
+    generate_page(
+        Path("content/index.md"),
+        Path("template.html"),
+        Path("public/index.html"),
+    )
 
 main()
 

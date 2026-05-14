@@ -23,7 +23,7 @@ def markdown_to_blocks(markdown):
 
 def block_to_block_type(block):
 
-    if match(r"#{1,6}", block):
+    if match(r"\s*#{1,6}", block):
         block_type = BlockType.HEADING
     elif match(r"```\n", block) and search(r"```$", block):
         block_type = BlockType.CODE

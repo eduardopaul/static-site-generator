@@ -42,13 +42,13 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
                 html_node.children.append(paragraph_node)
 
             case BlockType.HEADING:
-                prefix = match("#+ ", block_markdown).group(0)
+                prefix = match(r"\s*#+ ", block_markdown).group(0)
                 heading_level = len(findall("#", prefix))
 
                 html_node.children.append(
                     HTMLNode(
                         tag=f"h{heading_level}",
-                        value=sub("#+ ", "", block_markdown),
+                        value=sub("#+ ", "", block_markdown).strip(),
                     )
                 )
 
