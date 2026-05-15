@@ -69,50 +69,56 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
                 )
 
             case BlockType.QUOTE:
-                block_markdown = sub("^> *", "", block_markdown, flags=MULTILINE)
-                block_markdown = sub("\n", "<br>", block_markdown)
+                quote_node = HTMLNode(tag="blockquote", children=[])
 
-                html_node.children.append(
-                    HTMLNode(
-                        tag="blockquote",
-                        value=block_markdown,
+                block_markdown = sub("^> *", "", block_markdown, flags=MULTILINE)
+                block_markdown = sub("\n", " ", block_markdown)
+
+                textnodes = markdown_to_textnodes(block_markdown)
+                for textnode in textnodes:
+                    quote_node.children.append(
+                        text_node_to_html_node(textnode)
                     )
-                )
+
+                html_node.children.append(quote_node)
 
             case BlockType.UNORDERED_LIST:
+                ulist_node = HTMLNode(tag="ul", children=[])
+
                 block_markdown = sub("^- ", "", block_markdown, flags=MULTILINE)
-                block_markdown = block_markdown.splitlines()
+                block_markdown_list = block_markdown.splitlines()
 
-                html_lines = []
-                for line in block_markdown:
-                    html_lines.append("<li>" + line + "</li>")
+                for line in block_markdown_list:
+                    item_node = HTMLNode(tag="li", children=[])
 
-                block_markdown = "".join(html_lines)
+                    textnodes = markdown_to_textnodes(line)
+                    for textnode in textnodes:
+                        item_node.children.append(
+                            text_node_to_html_node(textnode)
+                        )
 
-                html_node.children.append(
-                    HTMLNode(
-                        tag="ul",
-                        value=block_markdown,
-                    )
-                )
+                    ulist_node.children.append(item_node)
+
+                html_node.children.append(ulist_node)
 
             case BlockType.ORDERED_LIST:
+                olist_node = HTMLNode(tag="ol", children=[])
+
                 block_markdown = sub(r"^\d+\. ", "", block_markdown, flags=MULTILINE)
-                block_markdown = block_markdown.splitlines()
+                block_markdown_list = block_markdown.splitlines()
 
-                html_lines = []
-                for line in block_markdown:
-                    html_lines.append("<li>" + line + "</li>")
+                for line in block_markdown_list:
+                    item_node = HTMLNode(tag="li", children=[])
 
-                block_markdown = "".join(html_lines)
+                    textnodes = markdown_to_textnodes(line)
+                    for textnode in textnodes:
+                        item_node.children.append(
+                            text_node_to_html_node(textnode)
+                        )
 
-                html_node.children.append(
-                    HTMLNode(
-                        tag="ol",
-                        value=block_markdown,
-                    )
-                )
+                    olist_node.children.append(item_node)
 
+                html_node.children.append(olist_node)
 
     return html_node
 

@@ -93,11 +93,11 @@ class TestMarkdownToHtmlNode(unittest.TestCase):
         markdown = dedent(
             """\
             > quote line one
-            > quote line two
-            > quote line three"""
+            > quote line **two**
+            > quote line _three_"""
         )
 
-        html = "<div><blockquote>quote line one<br>quote line two<br>quote line three</blockquote></div>"
+        html = "<div><blockquote>quote line one quote line <b>two</b> quote line <i>three</i></blockquote></div>"
 
         self.assertEqual(
             markdown_to_html_node(markdown).to_html(),
@@ -108,11 +108,11 @@ class TestMarkdownToHtmlNode(unittest.TestCase):
         markdown = dedent(
             """\
             - Item 1
-            - Item 2
-            - Item 3"""
+            - Item **2**
+            - Item _3_"""
         )
 
-        html = "<div><ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul></div>"
+        html = "<div><ul><li>Item 1</li><li>Item <b>2</b></li><li>Item <i>3</i></li></ul></div>"
 
         self.assertEqual(
             markdown_to_html_node(markdown).to_html(),
@@ -123,11 +123,11 @@ class TestMarkdownToHtmlNode(unittest.TestCase):
         markdown = dedent(
             """\
             1. Item 1
-            2. Item 2
-            3. Item 3"""
+            2. Item **2**
+            3. Item _3_"""
         )
 
-        html = "<div><ol><li>Item 1</li><li>Item 2</li><li>Item 3</li></ol></div>"
+        html = "<div><ol><li>Item 1</li><li>Item <b>2</b></li><li>Item <i>3</i></li></ol></div>"
 
         self.assertEqual(
             markdown_to_html_node(markdown).to_html(),
@@ -165,7 +165,7 @@ class TestMarkdownToHtmlNode(unittest.TestCase):
             lines."""
         )
 
-        html = "<div><h1>heading #1</h1><h2>heading #2</h2><p>A <b>markdown</b> file may contain several <i>blocks</i>.</p><ul><li>item 1</li><li>item 2</li><li>item 3</li></ul><ol><li>item 1</li><li>item 2</li><li>item 3</li></ol><blockquote>quote line 1<br>quote line 2<br>quote line 3</blockquote><pre><code>int x = 1;</code></pre><p>One last paragraph spanning multiple lines.</p></div>"
+        html = "<div><h1>heading #1</h1><h2>heading #2</h2><p>A <b>markdown</b> file may contain several <i>blocks</i>.</p><ul><li>item 1</li><li>item 2</li><li>item 3</li></ul><ol><li>item 1</li><li>item 2</li><li>item 3</li></ol><blockquote>quote line 1 quote line 2 quote line 3</blockquote><pre><code>int x = 1;</code></pre><p>One last paragraph spanning multiple lines.</p></div>"
 
         self.assertEqual(
             markdown_to_html_node(markdown).to_html(),
