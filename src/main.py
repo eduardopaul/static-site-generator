@@ -1,13 +1,15 @@
 from pathlib import Path
 
-from page import generate_page
+from copy_contents import copy_contents
+from page import generate_pages_recursive
 
 
 def main():
-    generate_page(
-        Path("content/index.md"),
+    copy_contents()
+    generate_pages_recursive(
+        Path("content"),
         Path("template.html"),
-        Path("public/index.html"),
+        Path("public"),
     )
 
 main()
