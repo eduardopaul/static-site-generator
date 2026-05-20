@@ -77,6 +77,45 @@ class TestGeneratePage(unittest.TestCase):
             template,
         )
 
+    def test_basepath(self):
+        self.maxDiff = None
+
+        self.from_path.write_text(
+            dedent(
+                """\
+                # Main title
+
+                [Why Glorfindel is More Impressive than Legolas](/blog/glorfindel)"""
+            )
+        )
+
+        with patch("builtins.print"):
+            generate_page(self.from_path, self.template_path, self.dest_path, "basepath/")
+
+        template = dedent(
+            """\
+            <!doctype html>
+            <html>
+              <head>
+                <meta charset="utf-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <title>Main title</title>
+                <link href="basepath/index.css" rel="stylesheet" />
+              </head>
+
+              <body>
+                <article><div><h1>Main title</h1><p><a href="basepath/blog/glorfindel">Why Glorfindel is More Impressive than Legolas</a></p></div></article>
+              </body>
+            </html>\n"""
+        )
+
+        html_output = self.dest_path.read_text()
+
+        self.assertEqual(
+            html_output,
+            template,
+        )
+
     def tearDown(self):
         self.path_.cleanup()
 
