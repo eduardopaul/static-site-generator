@@ -11,11 +11,15 @@ def main():
     except IndexError:
         basepath = "/"
 
-    copy_contents()
+    copy_contents(
+        Path("static"),
+        Path("docs"),
+    )
+
     generate_pages_recursive(
         Path("content"),
         Path("template.html"),
-        Path("public"),
+        Path("docs"),
     )
 
 main()

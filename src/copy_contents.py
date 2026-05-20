@@ -10,6 +10,8 @@ def rmtree(path):
             item.rmdir()
 
 def cptree(src, dst):
+    if not dst.is_dir():
+        dst.mkdir()
     for item in src.iterdir():
         item_rel = item.relative_to(src)
         if item.is_file():
@@ -22,6 +24,7 @@ def copy_contents(
     src: Path = Path("static"),
     dst: Path = Path("public"),
 ):
-    rmtree(dst)
+    if dst.is_dir():
+        rmtree(dst)
     cptree(src, dst)
 
