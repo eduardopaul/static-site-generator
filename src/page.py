@@ -60,8 +60,8 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, bas
         if path.is_dir():
             new_dest_dir_path = dest_dir_path/path.name
             new_dest_dir_path.mkdir()
-            generate_pages_recursive(path, template_path, dest_dir_path/path.name, base_path="/")
+            generate_pages_recursive(path, template_path, dest_dir_path/path.name, base_path)
         else:
             new_dest_dir_path = dest_dir_path/path.name.replace("md", "html")
-            generate_page(path, template_path, new_dest_dir_path, base_path="/")
+            generate_page(path, template_path, new_dest_dir_path, base_path)
 

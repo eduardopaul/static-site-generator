@@ -20,6 +20,7 @@ def main():
         Path("content"),
         Path("template.html"),
         Path("docs"),
+        basepath,
     )
 
 main()
